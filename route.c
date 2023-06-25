@@ -3,13 +3,14 @@
 void printConnection(void);
 
 /* 0 : 未接続, 1 : 接続 */
-int pathInfo[6][6] ={
-  {0, 1, 1, 0, 0, 1}, /* R0-RX間の接続 */
-  {1, 0, 1, 0, 0, 0},
-  {1, 1, 0, 1, 0, 0},
-  {0, 0, 1, 0, 1, 0},
-  {0, 0, 0, 1, 0, 1},
-  {1, 0, 0, 0, 0, 1}
+int pathInfo[7][7] ={
+  {0, 1, 1, 0, 0, 0, 1}, /* R0-RX間の接続 */
+  {1, 0, 1, 0, 0, 0, 0},
+  {1, 1, 0, 1, 0, 0, 0},
+  {0, 0, 1, 0, 1, 1, 0},
+  {0, 0, 0, 1, 0, 0, 1},
+  {0, 0, 0, 1, 0, 0, 1},
+  {1, 0, 0, 0, 1, 1, 0}
 };
 
 /* 接続関係にあれば、1を、なければ、0を返す。*/
@@ -85,7 +86,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
   if(isConnect(currentIndex, routeInfo->goalIndex))
   {
     printCostInfo(*routeInfo);
-    return routeInfo->num;
+    return 1;
   }
 
   /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
@@ -104,7 +105,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 
       /* 接続できる可能性が残っている。*/
       int cost2 = printCostHelp(kouho, routeInfo);
-      if(cost2 == -1)
+      if(cost2 == 0)
       {
         /* kouhoから接続できなかった場合 */
         popRoute(routeInfo);
@@ -118,7 +119,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
   }
 
   /* 接続関係に無いルーターの場合 */
-  return -1;
+  return 0;
 }
 
 void printCost(int startIndex, int goalIndex)
@@ -129,7 +130,7 @@ void printCost(int startIndex, int goalIndex)
 
 int main(void)
 {
-  printCost(0, 3);
+  printCost(0, 6);
   return 0;
 }
 
