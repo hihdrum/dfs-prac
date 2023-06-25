@@ -20,20 +20,11 @@ int isConnect(int srcIndex, int dstIndex)
 
 struct routeInfo
 {
+  int startIndex;
+  int goalIndex;
   int num;       /* 現在保持している件数 */
   int array[10]; /* 今までたどったルーター */
 };
-
-#if 0
-void addRoute(struct routeInfo *ri, int newRout)
-{
-  int num = ri->num;
-  ri->array[num] = newRout;
-
-  num++;
-  ri->num = num;
-}
-#endif
 
 void addRoute(struct routeInfo *ri, int newRout)
 {
@@ -73,23 +64,27 @@ void printRoute(struct routeInfo ri)
   {
     printf("%d ", ri.array[i]);
   }
+
+  printf("%d", ri.goalIndex);
+}
+
+void printCostInfo(struct routeInfo ri)
+{
+  printf("%d - %d : %d : ", ri.startIndex, ri.goalIndex, ri.num);
+  printRoute(ri);
+  putchar('\n');
 }
 
 /* 最初の目標 : 隣接しているルータ間のコストを算出できるようにする。*/
-int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
+int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 {
-  printf("DBG : %d : startIndex = %d, goalIndex = %d\n", __LINE__, startIndex, goalIndex);
-  addRoute(routeInfo, startIndex);
+  //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
+  addRoute(routeInfo, currentIndex);
 
   /* 隣接ルータの接続判定 */
-  if(isConnect(startIndex, goalIndex))
+  if(isConnect(currentIndex, routeInfo->goalIndex))
   {
-    printf("cost = %d, ", routeInfo->num);
-    addRoute(routeInfo, goalIndex);
-    printRoute(*routeInfo);
-    putchar('\n');
-    popRoute(routeInfo);
-
+    printCostInfo(*routeInfo);
     return routeInfo->num;
   }
 
@@ -97,9 +92,9 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
   int kouho;
   for(kouho = 0; kouho < 6; kouho++)
   {
-    if(isConnect(startIndex, kouho))
+    if(isConnect(currentIndex, kouho))
     {
-      printf("DBG : %d : startIndex = %d, kouho = %d\n", __LINE__, startIndex, kouho);
+      //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
       /* 既に辿った経路の場合は除外する。*/
       if(passedRoute(*routeInfo, kouho))
@@ -108,7 +103,7 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
       }
 
       /* 接続できる可能性が残っている。*/
-      int cost2 = calcCost(kouho, goalIndex, routeInfo);
+      int cost2 = printCostHelp(kouho, routeInfo);
       if(cost2 == -1)
       {
         /* kouhoから接続できなかった場合 */
@@ -117,7 +112,7 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
       }
 
       /* kouhoから接続できた場合 */
-      printf("DBG : %d : cost = %d, ", __LINE__, routeInfo->num);
+      //printf("DBG : %d : cost = %d, ", __LINE__, routeInfo->num);
       popRoute(routeInfo);
     }
   }
@@ -126,21 +121,15 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
   return -1;
 }
 
+void printCost(int startIndex, int goalIndex)
+{
+  struct routeInfo routeInfo = { .startIndex = startIndex, .goalIndex = goalIndex, .num = 0 };
+  printCostHelp(startIndex, &routeInfo);
+}
 
 int main(void)
 {
-#if 0
-  int goal;
-  for(goal = 0; goal < 6; goal++)
-  {
-    int cost = calcCost(0, goal);
-    printf("R0 - R%d 間のコストは%2dです。\n", goal, cost);
-  }
-#endif
-
-  struct routeInfo routeInfo = { .num = 0 };
-
-  int cost = calcCost(0, 3, &routeInfo);
+  printCost(0, 3);
   return 0;
 }
 
