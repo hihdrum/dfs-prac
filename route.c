@@ -90,6 +90,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
     {
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
+      /* 候補がゴールだった場合は結果を出力する。*/
       if(kouho == routeInfo->goalIndex)
       {
         printCostInfo(*routeInfo);
