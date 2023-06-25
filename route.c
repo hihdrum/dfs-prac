@@ -67,6 +67,13 @@ int passedRoute(struct routeInfo ri, int route)
   return 0;
 }
 
+void printRoute(struct routeInfo ri)
+{
+  for(int i = 0; i < ri.num; i++)
+  {
+    printf("%d ", ri.array[i]);
+  }
+}
 
 /* 最初の目標 : 隣接しているルータ間のコストを算出できるようにする。*/
 int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
@@ -101,11 +108,17 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
         int cost2 = calcCost(kouho, goalIndex, routeInfo);
         if(cost2 == -1)
         {
-          return -1;
+          popRoute(routeInfo);
+          continue;
         }
         else
         {
-          return routeInfo->num;
+          printf("DBG : %d : cost = %d, ", __LINE__, routeInfo->num);
+          printRoute(*routeInfo);
+          putchar('\n');
+
+          popRoute(routeInfo);
+          continue;
         }
       }
     }
@@ -115,13 +128,6 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
   }
 }
 
-void printRoute(struct routeInfo ri)
-{
-  for(int i = 0; i < ri.num; i++)
-  {
-    printf("%d ", ri.array[i]);
-  }
-}
 
 int main(void)
 {
