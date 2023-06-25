@@ -82,19 +82,19 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
   addRoute(routeInfo, currentIndex);
 
-  /* 隣接ルータの接続判定 */
-  if(isConnect(currentIndex, routeInfo->goalIndex))
-  {
-    printCostInfo(*routeInfo);
-  }
-
   /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
   int kouho;
-  for(kouho = 0; kouho < 6; kouho++)
+  for(kouho = 0; kouho < 7; kouho++)
   {
     if(isConnect(currentIndex, kouho))
     {
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
+
+      if(kouho == routeInfo->goalIndex)
+      {
+        printCostInfo(*routeInfo);
+        continue;
+      }
 
       /* 既に辿った経路の場合は除外する。*/
       if(passedRoute(*routeInfo, kouho))
@@ -129,7 +129,7 @@ void printCost(int startIndex, int goalIndex)
 
 int main(void)
 {
-  printCost(0, 6);
+  printCost(0, 5);
   return 0;
 }
 
