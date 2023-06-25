@@ -86,7 +86,6 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
   if(isConnect(currentIndex, routeInfo->goalIndex))
   {
     printCostInfo(*routeInfo);
-    return 1;
   }
 
   /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
