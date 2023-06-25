@@ -80,52 +80,50 @@ int calcCost(int startIndex, int goalIndex, struct routeInfo *routeInfo)
 {
   printf("DBG : %d : startIndex = %d, goalIndex = %d\n", __LINE__, startIndex, goalIndex);
   addRoute(routeInfo, startIndex);
-  int cost = 0;
 
   /* 隣接ルータの接続判定 */
   if(isConnect(startIndex, goalIndex))
   {
+    printf("cost = %d, ", routeInfo->num);
+    addRoute(routeInfo, goalIndex);
+    printRoute(*routeInfo);
+    putchar('\n');
+    popRoute(routeInfo);
+
     return routeInfo->num;
   }
-  else
+
+  /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
+  int kouho;
+  for(kouho = 0; kouho < 6; kouho++)
   {
-    /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
-    int kouho;
-    for(kouho = 0; kouho < 6; kouho++)
+    if(isConnect(startIndex, kouho))
     {
-      if(isConnect(startIndex, kouho))
+      printf("DBG : %d : startIndex = %d, kouho = %d\n", __LINE__, startIndex, kouho);
+
+      /* 既に辿った経路の場合は除外する。*/
+      if(passedRoute(*routeInfo, kouho))
       {
-        printf("DBG : %d : startIndex = %d, kouho = %d\n", __LINE__, startIndex, kouho);
-
-        /* 逆方向を省く処理が必要となる。*/
-        if(passedRoute(*routeInfo, kouho))
-        {
-          /* 既に辿った経路の場合は除外する。*/
-          continue;
-        }
-
-        /* 接続できる可能性が残っている。*/
-        int cost2 = calcCost(kouho, goalIndex, routeInfo);
-        if(cost2 == -1)
-        {
-          popRoute(routeInfo);
-          continue;
-        }
-        else
-        {
-          printf("DBG : %d : cost = %d, ", __LINE__, routeInfo->num);
-          printRoute(*routeInfo);
-          putchar('\n');
-
-          popRoute(routeInfo);
-          continue;
-        }
+        continue;
       }
-    }
 
-    /* 接続関係に無いルーターの場合 */
-    return -1;
+      /* 接続できる可能性が残っている。*/
+      int cost2 = calcCost(kouho, goalIndex, routeInfo);
+      if(cost2 == -1)
+      {
+        /* kouhoから接続できなかった場合 */
+        popRoute(routeInfo);
+        continue;
+      }
+
+      /* kouhoから接続できた場合 */
+      printf("DBG : %d : cost = %d, ", __LINE__, routeInfo->num);
+      popRoute(routeInfo);
+    }
   }
+
+  /* 接続関係に無いルーターの場合 */
+  return -1;
 }
 
 
@@ -143,9 +141,6 @@ int main(void)
   struct routeInfo routeInfo = { .num = 0 };
 
   int cost = calcCost(0, 3, &routeInfo);
-  printRoute(routeInfo);
-  putchar('\n');
-  printf("cost = %d\n", cost);
   return 0;
 }
 
