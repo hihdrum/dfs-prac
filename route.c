@@ -29,6 +29,8 @@ struct routeInfo
   int array[10]; /* 今までたどったルーター */
 };
 
+void searchRoute(int nextIndex, struct routeInfo *routeInfo);
+
 void pushRoute(struct routeInfo *ri, int newRout)
 {
   int *pNum = &ri->num;
@@ -104,9 +106,7 @@ int printCostHelp(struct routeInfo *routeInfo)
       }
 
       /* 別のルーターを経由して到達できるかを調べる。*/
-      pushRoute(routeInfo, kouho);
-      printCostHelp(routeInfo);
-      popRoute(routeInfo);
+      searchRoute(kouho, routeInfo);
     }
   }
 
@@ -114,12 +114,17 @@ int printCostHelp(struct routeInfo *routeInfo)
   return 0;
 }
 
+void searchRoute(int nextIndex, struct routeInfo *routeInfo)
+{
+  pushRoute(routeInfo, nextIndex);
+  printCostHelp(routeInfo);
+  popRoute(routeInfo);
+}
+
 void printCost(int startIndex, int goalIndex)
 {
   struct routeInfo routeInfo = { .startIndex = startIndex, .goalIndex = goalIndex, .num = 0 };
-  pushRoute(&routeInfo, startIndex);
-  printCostHelp(&routeInfo);
-  popRoute(&routeInfo);
+  searchRoute(startIndex, &routeInfo);
 }
 
 int main(void)
