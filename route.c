@@ -119,6 +119,7 @@ void printCost(int startIndex, int goalIndex)
   struct routeInfo routeInfo = { .startIndex = startIndex, .goalIndex = goalIndex, .num = 0 };
   pushRoute(&routeInfo, startIndex);
   printCostHelp(&routeInfo);
+  popRoute(&routeInfo);
 }
 
 int main(void)
