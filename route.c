@@ -78,7 +78,7 @@ void printCostInfo(struct routeInfo ri)
   putchar('\n');
 }
 
-int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
+int printCostHelp(struct routeInfo *routeInfo)
 {
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
 
@@ -86,7 +86,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
   int kouho;
   for(kouho = 0; kouho < DEF_ROUTER_NUM; kouho++)
   {
-    if(isConnect(currentIndex, kouho))
+    if(isConnect(routeInfo->array[routeInfo->num - 1], kouho))
     {
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
@@ -105,7 +105,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 
       /* 別のルーターを経由して到達できるかを調べる。*/
       pushRoute(routeInfo, kouho);
-      printCostHelp(kouho, routeInfo);
+      printCostHelp(routeInfo);
       popRoute(routeInfo);
     }
   }
@@ -118,7 +118,7 @@ void printCost(int startIndex, int goalIndex)
 {
   struct routeInfo routeInfo = { .startIndex = startIndex, .goalIndex = goalIndex, .num = 0 };
   pushRoute(&routeInfo, startIndex);
-  printCostHelp(startIndex, &routeInfo);
+  printCostHelp(&routeInfo);
 }
 
 int main(void)
