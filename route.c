@@ -27,7 +27,7 @@ struct routeInfo
   int array[10]; /* 今までたどったルーター */
 };
 
-void addRoute(struct routeInfo *ri, int newRout)
+void pushRoute(struct routeInfo *ri, int newRout)
 {
   int *pNum = &ri->num;
   ri->array[*pNum] = newRout;
@@ -80,7 +80,7 @@ void printCostInfo(struct routeInfo ri)
 int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 {
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
-  addRoute(routeInfo, currentIndex);
+  pushRoute(routeInfo, currentIndex);
 
   /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
   int kouho;
