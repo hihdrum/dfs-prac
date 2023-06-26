@@ -23,7 +23,6 @@ int isConnect(int srcIndex, int dstIndex)
 
 struct routeInfo
 {
-  int startIndex;
   int goalIndex;
   int num;       /* 現在保持している件数 */
   int array[10]; /* 今までたどったルーター */
@@ -75,7 +74,7 @@ void printRoute(struct routeInfo ri)
 
 void printCostInfo(struct routeInfo ri)
 {
-  printf("%d - %d : %d : ", ri.startIndex, ri.goalIndex, ri.num);
+  printf("%d - %d : %d : ", ri.array[0], ri.goalIndex, ri.num);
   printRoute(ri);
   putchar('\n');
 }
@@ -121,7 +120,7 @@ void searchRoute(int nextIndex, struct routeInfo *routeInfo)
 
 void printCost(int startIndex, int goalIndex)
 {
-  struct routeInfo routeInfo = { .startIndex = startIndex, .goalIndex = goalIndex, .num = 0 };
+  struct routeInfo routeInfo = { .goalIndex = goalIndex, .num = 0 };
   searchRoute(startIndex, &routeInfo);
 }
 
