@@ -80,7 +80,7 @@ void printCostInfo(struct routeInfo ri)
   putchar('\n');
 }
 
-int printCostHelp(struct routeInfo *routeInfo)
+void printCostHelp(struct routeInfo *routeInfo)
 {
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
   int currentIndex = routeInfo->array[routeInfo->num - 1];
@@ -110,9 +110,6 @@ int printCostHelp(struct routeInfo *routeInfo)
       searchRoute(kouho, routeInfo);
     }
   }
-
-  /* 接続関係に無いルーターの場合 */
-  return 0;
 }
 
 void searchRoute(int nextIndex, struct routeInfo *routeInfo)
