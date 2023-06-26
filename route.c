@@ -21,16 +21,16 @@ int isConnect(int srcIndex, int dstIndex)
   return connectInfo[srcIndex][dstIndex];
 }
 
-struct routeInfo
+struct pathInfo
 {
   int goalIndex;
   int num;       /* 現在保持している件数 */
   int array[10]; /* 今までたどったルーター */
 };
 
-void searchRoute(int nextIndex, struct routeInfo *routeInfo);
+void searchRoute(int nextIndex, struct pathInfo *pathInfo);
 
-void pushRoute(struct routeInfo *ri, int newRout)
+void pushRoute(struct pathInfo *ri, int newRout)
 {
   int *pNum = &ri->num;
   ri->array[*pNum] = newRout;
@@ -38,7 +38,7 @@ void pushRoute(struct routeInfo *ri, int newRout)
   (*pNum)++;
 }
 
-void popRoute(struct routeInfo *ri)
+void popRoute(struct pathInfo *ri)
 {
   if(0 >= ri->num)
   {
@@ -48,7 +48,7 @@ void popRoute(struct routeInfo *ri)
   ri->num--;
 }
 
-int passedRoute(struct routeInfo ri, int route)
+int passedRoute(struct pathInfo ri, int route)
 {
   int i;
   for(i = 0; i < ri.num; i++)
@@ -62,7 +62,7 @@ int passedRoute(struct routeInfo ri, int route)
   return 0;
 }
 
-void printRoute(struct routeInfo ri)
+void printRoute(struct pathInfo ri)
 {
   for(int i = 0; i < ri.num; i++)
   {
@@ -72,17 +72,17 @@ void printRoute(struct routeInfo ri)
   printf("%d", ri.goalIndex);
 }
 
-void printCostInfo(struct routeInfo ri)
+void printCostInfo(struct pathInfo ri)
 {
   printf("%d - %d : %d : ", ri.array[0], ri.goalIndex, ri.num);
   printRoute(ri);
   putchar('\n');
 }
 
-void printCostHelp(struct routeInfo *routeInfo)
+void printCostHelp(struct pathInfo *pathInfo)
 {
-  //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
-  int currentIndex = routeInfo->array[routeInfo->num - 1];
+  //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, pathInfo->goalIndex);
+  int currentIndex = pathInfo->array[pathInfo->num - 1];
 
   /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
   int kouho;
@@ -93,35 +93,35 @@ void printCostHelp(struct routeInfo *routeInfo)
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
       /* 候補がゴールだった場合は結果を出力する。*/
-      if(kouho == routeInfo->goalIndex)
+      if(kouho == pathInfo->goalIndex)
       {
-        printCostInfo(*routeInfo);
+        printCostInfo(*pathInfo);
         continue;
       }
 
       /* 既に辿った経路の場合は除外する。*/
-      if(passedRoute(*routeInfo, kouho))
+      if(passedRoute(*pathInfo, kouho))
       {
         continue;
       }
 
       /* 別のルーターを経由して到達できるかを調べる。*/
-      searchRoute(kouho, routeInfo);
+      searchRoute(kouho, pathInfo);
     }
   }
 }
 
-void searchRoute(int nextIndex, struct routeInfo *routeInfo)
+void searchRoute(int nextIndex, struct pathInfo *pathInfo)
 {
-  pushRoute(routeInfo, nextIndex);
-  printCostHelp(routeInfo);
-  popRoute(routeInfo);
+  pushRoute(pathInfo, nextIndex);
+  printCostHelp(pathInfo);
+  popRoute(pathInfo);
 }
 
 void printCost(int startIndex, int goalIndex)
 {
-  struct routeInfo routeInfo = { .goalIndex = goalIndex, .num = 0 };
-  searchRoute(startIndex, &routeInfo);
+  struct pathInfo pathInfo = { .goalIndex = goalIndex, .num = 0 };
+  searchRoute(startIndex, &pathInfo);
 }
 
 int main(void)
