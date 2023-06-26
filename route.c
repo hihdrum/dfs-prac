@@ -1,9 +1,11 @@
 #include <stdio.h>
 
+#define DEF_ROUTER_NUM (7)
+
 void printConnection(void);
 
 /* 0 : 未接続, 1 : 接続 */
-int pathInfo[7][7] ={
+int pathInfo[DEF_ROUTER_NUM][DEF_ROUTER_NUM] ={
   {0, 1, 1, 0, 0, 0, 1}, /* R0-RX間の接続 */
   {1, 0, 1, 0, 0, 0, 0},
   {1, 1, 0, 1, 0, 0, 0},
@@ -84,7 +86,7 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 
   /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
   int kouho;
-  for(kouho = 0; kouho < 7; kouho++)
+  for(kouho = 0; kouho < DEF_ROUTER_NUM; kouho++)
   {
     if(isConnect(currentIndex, kouho))
     {
