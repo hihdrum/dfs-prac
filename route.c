@@ -78,13 +78,12 @@ void printCostInfo(struct routeInfo ri)
   putchar('\n');
 }
 
-/* 最初の目標 : 隣接しているルータ間のコストを算出できるようにする。*/
 int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
 {
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
   pushRoute(routeInfo, currentIndex);
 
-  /* 自身が接続している別のルータを経由すればgoalIndexに到達できる可能性が残っている。*/
+  /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
   int kouho;
   for(kouho = 0; kouho < DEF_ROUTER_NUM; kouho++)
   {
@@ -105,9 +104,9 @@ int printCostHelp(int currentIndex, struct routeInfo *routeInfo)
         continue;
       }
 
-      /* 接続できる可能性が残っている。*/
-      int cost2 = printCostHelp(kouho, routeInfo);
-      if(cost2 == 0)
+      /* 別のルーターを経由して到達できるかを調べる。*/
+      int isReached = printCostHelp(kouho, routeInfo);
+      if(isReached == 0)
       {
         /* kouhoから接続できなかった場合 */
         popRoute(routeInfo);
