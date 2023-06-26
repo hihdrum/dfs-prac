@@ -83,12 +83,13 @@ void printCostInfo(struct routeInfo ri)
 int printCostHelp(struct routeInfo *routeInfo)
 {
   //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, routeInfo->goalIndex);
+  int currentIndex = routeInfo->array[routeInfo->num - 1];
 
   /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
   int kouho;
   for(kouho = 0; kouho < DEF_ROUTER_NUM; kouho++)
   {
-    if(isConnect(routeInfo->array[routeInfo->num - 1], kouho))
+    if(isConnect(currentIndex, kouho))
     {
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
