@@ -28,6 +28,11 @@ struct pathInfo
   int array[10]; /* 今までたどったルーター */
 };
 
+int isGoal(int nodeIndex, struct pathInfo *pathInfo)
+{
+  return nodeIndex == pathInfo->goalIndex;
+}
+
 void searchRoute(int nextIndex, struct pathInfo *pathInfo);
 
 void pushRoute(struct pathInfo *pi, int nextSearchNode)
@@ -93,7 +98,7 @@ void printCostHelp(struct pathInfo *pathInfo)
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
       /* 候補がゴールだった場合は結果を出力する。*/
-      if(kouho == pathInfo->goalIndex)
+      if(isGoal(kouho, pathInfo)
       {
         printCostInfo(pathInfo);
         continue;
