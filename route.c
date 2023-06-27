@@ -141,6 +141,7 @@ void searchPath(struct pathInfo *pathInfo)
       }
 
       /* 別ノードを経由した場合の可能性を調べる。*/
+      LOG("nextNode = %d, goalNode = %d\n", nextNode, pathInfo->goalNode);
       searchNextDepth(nextNode, pathInfo);
     }
   }
@@ -153,16 +154,26 @@ void searchNextDepth(int nextNode, struct pathInfo *pathInfo)
   popNode(pathInfo);
 }
 
-void runSearchPath(int startIndex, int goalNode)
+void runSearchPath(int startNode, int goalNode)
 {
+  if(startNode == goalNode)
+  {
+    return;
+  }
+
   struct stack stack = { .num = 0 };
   struct pathInfo pathInfo = { .goalNode = goalNode, .stack = &stack };
-  searchNextDepth(startIndex, &pathInfo);
+  searchNextDepth(startNode, &pathInfo);
 }
 
 int main(void)
 {
-  runSearchPath(0, 5);
+  for(int i = 0; i < DEF_NODE_NUM; i++)
+    for(int j = 0; j < DEF_NODE_NUM; j++)
+    {
+      runSearchPath(i, j);
+    }
+
   return 0;
 }
 
