@@ -30,30 +30,30 @@ struct pathInfo
 
 void searchRoute(int nextIndex, struct pathInfo *pathInfo);
 
-void pushRoute(struct pathInfo *ri, int newRout)
+void pushRoute(struct pathInfo *pi, int nextSearchNode)
 {
-  int *pNum = &ri->num;
-  ri->array[*pNum] = newRout;
+  int *pNum = &pi->num;
+  pi->array[*pNum] = nextSearchNode;
 
   (*pNum)++;
 }
 
-void popRoute(struct pathInfo *ri)
+void popRoute(struct pathInfo *pi)
 {
-  if(0 >= ri->num)
+  if(0 >= pi->num)
   {
     return;
   }
 
-  ri->num--;
+  (pi->num)--;
 }
 
-int passedRoute(struct pathInfo ri, int route)
+int passedRoute(struct pathInfo *pi, int node)
 {
   int i;
-  for(i = 0; i < ri.num; i++)
+  for(i = 0; i < pi->num; i++)
   {
-    if(ri.array[i] == route)
+    if(pi->array[i] == node)
     {
       return 1;
     }
@@ -62,20 +62,20 @@ int passedRoute(struct pathInfo ri, int route)
   return 0;
 }
 
-void printRoute(struct pathInfo ri)
+void printRoute(struct pathInfo *pi)
 {
-  for(int i = 0; i < ri.num; i++)
+  for(int i = 0; i < pi->num; i++)
   {
-    printf("%d ", ri.array[i]);
+    printf("%d ", pi->array[i]);
   }
 
-  printf("%d", ri.goalIndex);
+  printf("%d", pi->goalIndex);
 }
 
-void printCostInfo(struct pathInfo ri)
+void printCostInfo(struct pathInfo *pi)
 {
-  printf("%d - %d : %d : ", ri.array[0], ri.goalIndex, ri.num);
-  printRoute(ri);
+  printf("%d - %d : %d : ", pi->array[0], pi->goalIndex, pi->num);
+  printRoute(pi);
   putchar('\n');
 }
 
@@ -95,12 +95,12 @@ void printCostHelp(struct pathInfo *pathInfo)
       /* 候補がゴールだった場合は結果を出力する。*/
       if(kouho == pathInfo->goalIndex)
       {
-        printCostInfo(*pathInfo);
+        printCostInfo(pathInfo);
         continue;
       }
 
       /* 既に辿った経路の場合は除外する。*/
-      if(passedRoute(*pathInfo, kouho))
+      if(passedRoute(pathInfo, kouho))
       {
         continue;
       }
