@@ -10,7 +10,20 @@
 
 #define DEF_NODE_NUM (7)
 
+struct stack
+{
+  int num;
+  int array[10];
+};
+
+struct pathInfo
+{
+  int goalNode;
+  struct stack *stack;
+};
+
 void printConnection(void);
+void searchNextDepth(int nextNode, struct pathInfo *pathInfo);
 
 /* 0 : 未接続, 1 : 接続 */
 int edgeInfo[DEF_NODE_NUM][DEF_NODE_NUM] ={
@@ -29,44 +42,29 @@ int isConnect(int srcIndex, int dstIndex)
   return edgeInfo[srcIndex][dstIndex];
 }
 
-struct pathInfo
+/* スタック関係 */
+void stack_push(int i, struct stack *stack)
 {
-  int goalIndex;
-  int num;       /* 現在保持している件数 */
-  int array[10]; /* 今までたどったルーター */
-};
-
-int isGoal(int nodeIndex, struct pathInfo *pathInfo)
-{
-  return nodeIndex == pathInfo->goalIndex;
+  int *num = &stack->num;
+  stack->array[*num] = i;
+  (*num)++;
 }
 
-void searchRoute(int nextIndex, struct pathInfo *pathInfo);
-
-void pushNode(struct pathInfo *pi, int nextSearchNode)
+void stack_pop(struct stack *stack)
 {
-  int *pNum = &pi->num;
-  pi->array[*pNum] = nextSearchNode;
-
-  (*pNum)++;
-}
-
-void popNode(struct pathInfo *pi)
-{
-  if(0 >= pi->num)
+  if(0 >= stack->num)
   {
     return;
   }
 
-  (pi->num)--;
+  (stack->num)--;
 }
 
-int passedRoute(struct pathInfo *pi, int node)
+int stack_isMember(int data, struct stack *stack)
 {
-  int i;
-  for(i = 0; i < pi->num; i++)
+  for(int i = 0; i < stack->num; i++)
   {
-    if(pi->array[i] == node)
+    if(stack->array[i] == data)
     {
       return 1;
     }
@@ -75,71 +73,96 @@ int passedRoute(struct pathInfo *pi, int node)
   return 0;
 }
 
-void printRoute(struct pathInfo *pi)
+int stack_getLast(struct stack *stack)
 {
-  for(int i = 0; i < pi->num; i++)
-  {
-    printf("%d ", pi->array[i]);
-  }
-
-  printf("%d", pi->goalIndex);
+  return stack->array[stack->num - 1];
 }
 
-void printCostInfo(struct pathInfo *pi)
+/* pathInfo関係 */
+int isGoal(int nodeIndex, struct pathInfo *pathInfo)
 {
-  printf("%d - %d : %d : ", pi->array[0], pi->goalIndex, pi->num);
-  printRoute(pi);
+  return nodeIndex == pathInfo->goalNode;
+}
+
+void pushNode(struct pathInfo *pi, int node)
+{
+  stack_push(node, pi->stack);
+}
+
+void popNode(struct pathInfo *pi)
+{
+  stack_pop(pi->stack);
+}
+
+int passedNode(int node, struct pathInfo *pi)
+{
+  return stack_isMember(node, pi->stack);
+}
+
+void printPath(struct pathInfo *pi)
+{
+  struct stack *stack = pi->stack;
+
+  for(int i = 0; i < stack->num; i++)
+  {
+    printf("%d ", stack->array[i]);
+  }
+
+  printf("%d", pi->goalNode);
+}
+
+void printPathInfo(struct pathInfo *pi)
+{
+  struct stack *stack = pi->stack;
+  printf("%d - %d : %d : ", stack->array[0], pi->goalNode, stack->num);
+  printPath(pi);
   putchar('\n');
 }
 
-void printCostHelp(struct pathInfo *pathInfo)
+void searchPath(struct pathInfo *pathInfo)
 {
-  int currentIndex = pathInfo->array[pathInfo->num - 1];
-  LOG("currentIndex = %d, goalIndex = %d\n", currentIndex, pathInfo->goalIndex);
+  int currentNode = stack_getLast(pathInfo->stack);
+  LOG("currentNode = %d, goalNode = %d\n", currentNode, pathInfo->goalNode);
 
-  /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
-  int kouho;
-  for(kouho = 0; kouho < DEF_NODE_NUM; kouho++)
+  int nextNode;
+  for(nextNode = 0; nextNode < DEF_NODE_NUM; nextNode++)
   {
-    if(isConnect(currentIndex, kouho))
+    if(isConnect(currentNode, nextNode))
     {
-      //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
-
-      /* 候補がゴールだった場合は結果を出力する。*/
-      if(isGoal(kouho, pathInfo))
+      if(isGoal(nextNode, pathInfo))
       {
-        printCostInfo(pathInfo);
+        printPathInfo(pathInfo);
         continue;
       }
 
-      /* 既に辿った経路の場合は除外する。*/
-      if(passedRoute(pathInfo, kouho))
+      if(passedNode(nextNode, pathInfo))
       {
         continue;
       }
 
-      /* 別のルーターを経由して到達できるかを調べる。*/
-      searchRoute(kouho, pathInfo);
+      /* 別ノードを経由した場合の可能性を調べる。*/
+      searchNextDepth(nextNode, pathInfo);
     }
   }
 }
 
-void searchRoute(int nextIndex, struct pathInfo *pathInfo)
+void searchNextDepth(int nextNode, struct pathInfo *pathInfo)
 {
-  pushNode(pathInfo, nextIndex);
-  printCostHelp(pathInfo);
+  pushNode(pathInfo, nextNode);
+  searchPath(pathInfo);
   popNode(pathInfo);
 }
 
-void printCost(int startIndex, int goalIndex)
+void runSearchPath(int startIndex, int goalNode)
 {
-  struct pathInfo pathInfo = { .goalIndex = goalIndex, .num = 0 };
-  searchRoute(startIndex, &pathInfo);
+  struct stack stack = { .num = 0 };
+  struct pathInfo pathInfo = { .goalNode = goalNode, .stack = &stack };
+  searchNextDepth(startIndex, &pathInfo);
 }
 
 int main(void)
 {
-  printCost(0, 5);
+  runSearchPath(0, 5);
   return 0;
 }
 
