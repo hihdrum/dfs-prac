@@ -1,5 +1,13 @@
 #include <stdio.h>
 
+//#define DEBUG
+
+#ifdef DEBUG
+#define LOG(fmt, ...) printf("DBG :%s:%3d: " fmt, __func__, __LINE__, ##__VA_ARGS__)
+#else
+#define LOG(fmt, ...)
+#endif
+
 #define DEF_NODE_NUM (7)
 
 void printConnection(void);
@@ -35,7 +43,7 @@ int isGoal(int nodeIndex, struct pathInfo *pathInfo)
 
 void searchRoute(int nextIndex, struct pathInfo *pathInfo);
 
-void pushRoute(struct pathInfo *pi, int nextSearchNode)
+void pushNode(struct pathInfo *pi, int nextSearchNode)
 {
   int *pNum = &pi->num;
   pi->array[*pNum] = nextSearchNode;
@@ -43,7 +51,7 @@ void pushRoute(struct pathInfo *pi, int nextSearchNode)
   (*pNum)++;
 }
 
-void popRoute(struct pathInfo *pi)
+void popNode(struct pathInfo *pi)
 {
   if(0 >= pi->num)
   {
@@ -86,8 +94,8 @@ void printCostInfo(struct pathInfo *pi)
 
 void printCostHelp(struct pathInfo *pathInfo)
 {
-  //printf("DBG : %d : currentIndex = %d, goalIndex = %d\n", __LINE__, currentIndex, pathInfo->goalIndex);
   int currentIndex = pathInfo->array[pathInfo->num - 1];
+  LOG("currentIndex = %d, goalIndex = %d\n", currentIndex, pathInfo->goalIndex);
 
   /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
   int kouho;
@@ -118,9 +126,9 @@ void printCostHelp(struct pathInfo *pathInfo)
 
 void searchRoute(int nextIndex, struct pathInfo *pathInfo)
 {
-  pushRoute(pathInfo, nextIndex);
+  pushNode(pathInfo, nextIndex);
   printCostHelp(pathInfo);
-  popRoute(pathInfo);
+  popNode(pathInfo);
 }
 
 void printCost(int startIndex, int goalIndex)
