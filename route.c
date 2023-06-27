@@ -5,7 +5,7 @@
 void printConnection(void);
 
 /* 0 : 未接続, 1 : 接続 */
-int connectInfo[DEF_ROUTER_NUM][DEF_ROUTER_NUM] ={
+int edgeInfo[DEF_ROUTER_NUM][DEF_ROUTER_NUM] ={
   {0, 1, 1, 0, 0, 0, 1}, /* R0-RX間の接続 */
   {1, 0, 1, 0, 0, 0, 0},
   {1, 1, 0, 1, 0, 0, 0},
@@ -18,7 +18,7 @@ int connectInfo[DEF_ROUTER_NUM][DEF_ROUTER_NUM] ={
 /* 接続関係にあれば、1を、なければ、0を返す。*/
 int isConnect(int srcIndex, int dstIndex)
 {
-  return connectInfo[srcIndex][dstIndex];
+  return edgeInfo[srcIndex][dstIndex];
 }
 
 struct pathInfo
