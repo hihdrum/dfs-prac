@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-#define DEF_ROUTER_NUM (7)
+#define DEF_NODE_NUM (7)
 
 void printConnection(void);
 
 /* 0 : 未接続, 1 : 接続 */
-int edgeInfo[DEF_ROUTER_NUM][DEF_ROUTER_NUM] ={
+int edgeInfo[DEF_NODE_NUM][DEF_NODE_NUM] ={
   {0, 1, 1, 0, 0, 0, 1}, /* R0-RX間の接続 */
   {1, 0, 1, 0, 0, 0, 0},
   {1, 1, 0, 1, 0, 0, 0},
@@ -91,14 +91,14 @@ void printCostHelp(struct pathInfo *pathInfo)
 
   /* 現在のルーターと接続関係にあるルーターを網羅的に調べる。*/
   int kouho;
-  for(kouho = 0; kouho < DEF_ROUTER_NUM; kouho++)
+  for(kouho = 0; kouho < DEF_NODE_NUM; kouho++)
   {
     if(isConnect(currentIndex, kouho))
     {
       //printf("DBG : %d : currentIndex = %d, kouho = %d\n", __LINE__, currentIndex, kouho);
 
       /* 候補がゴールだった場合は結果を出力する。*/
-      if(isGoal(kouho, pathInfo)
+      if(isGoal(kouho, pathInfo))
       {
         printCostInfo(pathInfo);
         continue;
