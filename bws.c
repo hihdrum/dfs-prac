@@ -81,7 +81,6 @@ struct nodeInfo *dequeue(void)
   return ret;
 }
 
-#if 0
 int isPassed(struct nodeInfo *nodeInfo, int node)
 {
   if(NULL == nodeInfo)
@@ -92,27 +91,6 @@ int isPassed(struct nodeInfo *nodeInfo, int node)
   if(nodeInfo->node == node)
   {
     return 1;
-  }
-
-  return isPassed(nodeInfo->parent, node);
-}
-#endif
-
-int isPassed(struct nodeInfo *nodeInfo, int node)
-{
-  if(NULL == nodeInfo)
-  {
-    return 0;
-  }
-
-  if(nodeInfo->node == node)
-  {
-    return 1;
-  }
-
-  if(nodeInfo->parent == NULL)
-  {
-    return 0;
   }
 
   return isPassed(nodeInfo->parent, node);
