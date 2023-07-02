@@ -153,6 +153,12 @@ void runSearch(int start, int goal)
 
 int main(void)
 {
-  runSearch(0, 3);
+  for(int i = 0; i < DEF_NODE_NUM; i++)
+    for(int j = 0; j < DEF_NODE_NUM; j++)
+    {
+      runSearch(i, j);
+      memset(&gQueue, 0x00, sizeof(gQueue));
+    }
+
   return 0;
 }
