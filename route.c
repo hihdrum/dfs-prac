@@ -8,22 +8,10 @@
 #define LOG(fmt, ...)
 #endif
 
+
+/* 共通 */
+/*-----------------------------------------------*/
 #define DEF_NODE_NUM (7)
-
-struct stack
-{
-  int num;
-  int array[10];
-};
-
-struct pathInfo
-{
-  int goalNode;
-  struct stack *stack;
-};
-
-void printConnection(void);
-void searchNextDepth(int nextNode, struct pathInfo *pathInfo);
 
 /* 0 : 未接続, 1 : 接続 */
 int edgeInfo[DEF_NODE_NUM][DEF_NODE_NUM] ={
@@ -41,6 +29,22 @@ int isConnect(int srcIndex, int dstIndex)
 {
   return edgeInfo[srcIndex][dstIndex];
 }
+
+/* 深さ優先探索向け */
+struct stack
+{
+  int num;
+  int array[10];
+};
+
+struct pathInfo
+{
+  int goalNode;
+  struct stack *stack;
+};
+
+void printConnection(void);
+void searchNextDepth(int nextNode, struct pathInfo *pathInfo);
 
 /* スタック関係 */
 void stack_push(int i, struct stack *stack)
@@ -154,7 +158,7 @@ void searchNextDepth(int nextNode, struct pathInfo *pathInfo)
   popNode(pathInfo);
 }
 
-void runSearchPath(int startNode, int goalNode)
+void runDFSearch(int startNode, int goalNode)
 {
   if(startNode == goalNode)
   {
@@ -171,7 +175,7 @@ int main(void)
   for(int i = 0; i < DEF_NODE_NUM; i++)
     for(int j = 0; j < DEF_NODE_NUM; j++)
     {
-      runSearchPath(i, j);
+      runDFSearch(i, j);
     }
 
   return 0;
@@ -198,5 +202,3 @@ void printConnection(void)
     putchar('\n');
   }
 }
-
-
