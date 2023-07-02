@@ -1,34 +1,8 @@
 #include <stdio.h>
 
 //#define DEBUG
-
-#ifdef DEBUG
-#define LOG(fmt, ...) printf("DBG :%s:%3d: " fmt, __func__, __LINE__, ##__VA_ARGS__)
-#else
-#define LOG(fmt, ...)
-#endif
-
-
-/* 共通 */
-/*-----------------------------------------------*/
-#define DEF_NODE_NUM (7)
-
-/* 0 : 未接続, 1 : 接続 */
-int edgeInfo[DEF_NODE_NUM][DEF_NODE_NUM] ={
-  {0, 1, 1, 0, 0, 0, 1}, /* R0-RX間の接続 */
-  {1, 0, 1, 0, 0, 0, 0},
-  {1, 1, 0, 1, 0, 0, 0},
-  {0, 0, 1, 0, 1, 1, 0},
-  {0, 0, 0, 1, 0, 0, 1},
-  {0, 0, 0, 1, 0, 0, 1},
-  {1, 0, 0, 0, 1, 1, 0}
-};
-
-/* 接続関係にあれば、1を、なければ、0を返す。*/
-int isConnect(int srcIndex, int dstIndex)
-{
-  return edgeInfo[srcIndex][dstIndex];
-}
+#include "log.h"
+#include "edgeInfo.h"
 
 /* 幅優先探索向け */
 /*-----------------------------------------------*/
