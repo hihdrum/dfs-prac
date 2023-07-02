@@ -157,8 +157,7 @@ void searchPath(struct pathInfo *pathInfo)
   int currentNode = stack_getLast(pathInfo->stack);
   LOG("currentNode = %d, goalNode = %d\n", currentNode, pathInfo->goalNode);
 
-  int nextNode;
-  for(nextNode = 0; nextNode < DEF_NODE_NUM; nextNode++)
+  for(int nextNode = 0; nextNode < DEF_NODE_NUM; nextNode++)
   {
     if(isConnect(currentNode, nextNode))
     {

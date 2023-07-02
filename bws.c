@@ -109,32 +109,21 @@ void printRoute(struct nodeInfo *nodeInfo, int goal)
 {
   printf("%d ", goal);
   printRouteHelp(nodeInfo);
+  putchar('\n');
 }
 
 void searchPath(int goal)
 {
-  LOG("goal = %d\n", goal);
-
   struct nodeInfo *currentNodeInfo = dequeue();
-  if(NULL == currentNodeInfo)
-  {
-    return;
-  }
+  if(NULL == currentNodeInfo) { return; }
 
-  int currentNode = currentNodeInfo->node;
-
-  /* startと隣接している候補のNodeを追加する。*/
   for(int nextNode = 0; nextNode < DEF_NODE_NUM; nextNode++)
   {
-    LOG("currentNode = %d, nextNode = %d\n", currentNode, nextNode);
-
-    if(isConnect(currentNode, nextNode))
+    if(isConnect(currentNodeInfo->node, nextNode))
     {
       if(nextNode == goal)
       {
-        LOG("GOAL\n");
         printRoute(currentNodeInfo, goal);
-        putchar('\n');
         continue;
       }
 
@@ -143,11 +132,11 @@ void searchPath(int goal)
         continue;
       }
 
+      /* 到達可能性のあるノードを候補として追加する。*/
       inqueue(&(struct nodeInfo){ .node = nextNode, .parent = currentNodeInfo});
+      searchPath(goal);
     }
   }
-
-  searchPath(goal);
 }
 
 void runSearch(int start, int goal)
