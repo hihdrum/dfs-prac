@@ -4,34 +4,6 @@
 #include "log.h"
 #include "edgeInfo.h"
 
-/* 幅優先探索向け */
-/*-----------------------------------------------*/
-struct nodeInfo
-{
-  int depth;
-  struct nodeInfo *parent;
-};
-
-struct queue
-{
-  int num;
-  int point;
-  struct nodeInfo nodeInfoArray[DEF_NODE_NUM * DEF_NODE_NUM];
-};
-
-struct queue gQueue;
-
-void inqueue(struct nodeInfo *nodeInfo)
-{
-  gQueue.nodeInfoArray[gQueue.num] = *nodeInfo;
-  gQueue.num++;
-}
-
-void dequeue(void)
-{
-  gQueue.point++;
-}
-
 /* 深さ優先探索向け */
 /*-----------------------------------------------*/
 struct stack
