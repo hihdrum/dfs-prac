@@ -139,9 +139,7 @@ void runDFSearch(int startNode, int goalNode)
     return;
   }
 
-  struct stack stack = { .num = 0 };
-  struct pathInfo pathInfo = { .goalNode = goalNode, .stack = &stack };
-  searchNextDepth(startNode, &pathInfo);
+  searchNextDepth(startNode, &(struct pathInfo){ .goalNode = goalNode, .stack = &(struct stack){ .num = 0 }});
 }
 
 int main(void)
