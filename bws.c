@@ -55,7 +55,8 @@ struct nodeInfo *dequeue(void)
   return ret;
 }
 
-int isPassed(struct nodeInfo *nodeInfo, int node)
+/* 再帰版 */
+int isPassed_rec(struct nodeInfo *nodeInfo, int node)
 {
   if(NULL == nodeInfo)
   {
@@ -67,7 +68,26 @@ int isPassed(struct nodeInfo *nodeInfo, int node)
     return 1;
   }
 
-  return isPassed(nodeInfo->parent, node);
+  return isPassed_rec(nodeInfo->parent, node);
+}
+
+/* 非再帰版 */
+int isPassed(struct nodeInfo *nodeInfo, int node)
+{
+  while(1)
+  {
+    if(!nodeInfo)
+    {
+      return 0;
+    }
+
+    if(nodeInfo->node == node)
+    {
+      return 1;
+    }
+
+    nodeInfo = nodeInfo->parent;
+  }
 }
 
 void printRouteHelp(struct nodeInfo *nodeInfo)
@@ -79,10 +99,23 @@ void printRouteHelp(struct nodeInfo *nodeInfo)
   }
 }
 
-void printRoute(struct nodeInfo *nodeInfo, int goal)
+/* 再帰版 */
+void printRoute_rec(struct nodeInfo *nodeInfo, int goal)
 {
   printf("%d ", goal);
   printRouteHelp(nodeInfo);
+  putchar('\n');
+}
+
+/* 非再帰版 */
+void printRoute(struct nodeInfo *nodeInfo, int goal)
+{
+  printf("%d ", goal);
+  while(nodeInfo)
+  {
+    printf("%d ", nodeInfo->node);
+    nodeInfo = nodeInfo->parent;
+  }
   putchar('\n');
 }
 
