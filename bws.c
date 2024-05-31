@@ -119,6 +119,7 @@ void printRoute(struct nodeInfo *nodeInfo, int goal)
   putchar('\n');
 }
 
+/* 再帰版 */
 void searchPath_rec(int goal)
 {
   struct nodeInfo *currentNodeInfo = dequeue();
@@ -146,6 +147,7 @@ void searchPath_rec(int goal)
   }
 }
 
+/* 非再帰版 */
 void searchPath(int goal)
 {
   while(1)
